@@ -1,23 +1,20 @@
 package com.narxoz.rpg.artifact;
 
-/**
- * A restorative or alchemical potion stored in the vault.
- */
 public class Potion extends Artifact {
+    private final int healAmount;
+    private final String potionType;
 
-    private final int healing;
-
-    public Potion(String name, int value, int weight, int healing) {
-        super(name, value, weight);
-        this.healing = healing;
+    public Potion(String name, int value, int healAmount, String potionType) {
+        super(name, value);
+        this.healAmount = healAmount;
+        this.potionType = potionType;
     }
 
-    public int getHealing() {
-        return healing;
-    }
+    public int getHealAmount() { return healAmount; }
+    public String getPotionType() { return potionType; }
 
     @Override
     public void accept(ArtifactVisitor visitor) {
-        // TODO: call visitor.visit(this) for double dispatch.
+        visitor.visit(this);
     }
 }
