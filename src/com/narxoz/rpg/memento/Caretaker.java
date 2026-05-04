@@ -1,51 +1,40 @@
 package com.narxoz.rpg.memento;
 
+import com.narxoz.rpg.combatant.Hero;
 import com.narxoz.rpg.combatant.HeroMemento;
+import java.util.Stack;
 
-/**
- * Stores hero snapshots for the Chronomancer's Vault rewind mechanic.
- *
- * This class intentionally sits in a different package from {@link HeroMemento}
- * so it can only treat mementos as opaque values.
- */
 public class Caretaker {
+    private final Stack<HeroMemento> savePoints = new Stack<>();
 
-    /**
-     * Saves a snapshot to the caretaker history.
-     *
-     * @param memento the snapshot to store
-     */
-    public void save(HeroMemento memento) {
-        // TODO: push the snapshot onto the history stack.
+    public void save(Hero hero) {
+        HeroMemento memento = hero.createMemento();
+        savePoints.push(memento);
+        System.out.println("[CARETAKER] Save point created. Total saves: " + savePoints.size());
     }
 
-    /**
-     * Removes and returns the most recent snapshot.
-     *
-     * @return the latest stored snapshot, or null in the scaffold
-     */
-    public HeroMemento undo() {
-        // TODO: pop the most recent snapshot from the history stack.
-        return null;
+    public boolean restore(Hero hero) {
+        if (savePoints.isEmpty()) {
+            System.out.println("[CARETAKER] No save points available!");
+            return false;
+        }
+
+        HeroMemento memento = savePoints.pop();
+        hero.restoreMemento(memento);
+        System.out.println("[CARETAKER] State restored. Remaining saves: " + savePoints.size());
+        return true;
     }
 
-    /**
-     * Returns the most recent snapshot without removing it.
-     *
-     * @return the latest stored snapshot, or null in the scaffold
-     */
-    public HeroMemento peek() {
-        // TODO: read the top snapshot without exposing its internals.
-        return null;
+    public boolean hasSavePoints() {
+        return !savePoints.isEmpty();
     }
 
-    /**
-     * Reports how many snapshots are stored.
-     *
-     * @return the number of saved snapshots
-     */
-    public int size() {
-        // TODO: return the history size.
-        return 0;
+    public void clear() {
+        savePoints.clear();
+        System.out.println("[CARETAKER] All save points cleared.");
+    }
+
+    public int getSaveCount() {
+        return savePoints.size();
     }
 }
